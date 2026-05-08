@@ -1,0 +1,32 @@
+### POST - Client access_token
+POST {{ server }}/realms/{{ realm }}/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id=spring-app-belaide&
+client_secret=8dmaUhNLjGcAqBcp4hINWwsKf9JT9U3c
+
+> {%
+    const token = response.body.access_token
+    if (token) {
+        client.global.set('access_token', token)
+    }
+ %}
+
+### Post - Create user
+POST {{ server }}/admin/realms/{{ realm }}/users
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "username": "jdoe",
+  "enabled": true,
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "jdoe@example.com",
+  "credentials": [{
+    "type": "password",
+    "value": "password123",
+    "temporary": false
+  }]
+}

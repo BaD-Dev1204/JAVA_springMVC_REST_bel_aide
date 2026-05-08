@@ -10,14 +10,13 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @SoftDelete(columnName = "is_deleted")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -35,7 +34,7 @@ public abstract class BaseEntity {
     @Column(nullable = false, updatable = false)
     @Setter(AccessLevel.NONE)
     @ToString.Include
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @CreatedBy
     @Column(nullable = false, updatable = false)
@@ -46,7 +45,7 @@ public abstract class BaseEntity {
     @LastModifiedDate
     @Column(nullable = false)
     @ToString.Include
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 
     @LastModifiedBy
     @Column(nullable = false)

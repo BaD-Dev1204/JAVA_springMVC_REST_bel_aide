@@ -1,16 +1,22 @@
 package be.baddev.java_springmvc_rest_bel_aide.dal.entities.post;
 
 import be.baddev.java_springmvc_rest_bel_aide.dal.entities.bases.BaseEntity;
-import be.baddev.java_springmvc_rest_bel_aide.dal.enums.PostType;
+import be.baddev.java_springmvc_rest_bel_aide.dal.enums.post.PostMode;
+import be.baddev.java_springmvc_rest_bel_aide.dal.enums.post.PostStatus;
+import be.baddev.java_springmvc_rest_bel_aide.dal.enums.post.PostType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "t_post")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
+@NoArgsConstructor
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class Post extends BaseEntity {
 
     @Column(nullable = false, length = 500)
@@ -21,28 +27,54 @@ public class Post extends BaseEntity {
     @ToString.Include
     private String description;
 
-    @Column(nullable = false, length = 100)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 50)
     @ToString.Include
-    private String status;
+    private PostStatus status;
 
-    @Column(name = "is_visible", nullable = false)
-    @ToString.Include
-    private boolean isVisible;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "post_type", nullable = false, length = 20)
+    private PostType postType;
 
-    @Column(nullable = false, length = 150)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "post_mode", nullable = false, length = 20)
+    private PostMode postMode;
+
+    @Column(nullable = true, length = 150)
     @ToString.Include
     private String city;
 
-    @Column(nullable = false, precision = 10, scale = 8)
+    @Column(nullable = true, precision = 10, scale = 8)
     @ToString.Include
-    private Double latitude;
+    private BigDecimal latitude;
 
-    @Column(nullable = false, precision = 11, scale = 8)
+    @Column(nullable = true, precision = 11, scale = 8)
     @ToString.Include
-    private Double longitude;
+    private BigDecimal longitude;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 30)
-    @ToString.Include
-    private PostType type;
+    public Post(
+            String title,
+            String description,
+            PostStatus status,
+            PostType type,
+            PostMode mode,
+            String city,
+            BigDecimal latitude,
+            BigDecimal longitude
+    ) {
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.postType = type;
+        this.postMode = mode;
+        this.city = city;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public Post(String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
+
 }
