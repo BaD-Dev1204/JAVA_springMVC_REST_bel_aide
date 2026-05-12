@@ -5,6 +5,8 @@ import be.baddev.java_springmvc_rest_bel_aide.pl.exceptions.BadRequestException;
 import be.baddev.java_springmvc_rest_bel_aide.pl.exceptions.ConflictException;
 import be.baddev.java_springmvc_rest_bel_aide.pl.exceptions.ForbiddenException;
 import be.baddev.java_springmvc_rest_bel_aide.pl.exceptions.NotFoundException;
+import be.baddev.java_springmvc_rest_bel_aide.pl.exceptions.UnauthorizedException;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,12 +14,32 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
 
+/**
+ * Global REST exception handler.
+ *
+ * <p>
+ * This advice centralizes HTTP exception handling
+ * for all REST controllers of the application.
+ * </p>
+ *
+ * <p>
+ * Each handled exception is converted into
+ * a standardized {@link ApiError} response.
+ * </p>
+ *
+ * @author BaD-DeV
+ * @since 1.0
+ */
+@Hidden
 @RestControllerAdvice
 public class HttpControllerAdvice {
 
-    // =========================
-    // 404 - NOT FOUND
-    // =========================
+    /**
+     * Handles resource not found exceptions.
+     *
+     * @param ex thrown exception
+     * @return standardized API error response
+     */
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ApiError> handleNotFound(NotFoundException ex) {
 
@@ -30,9 +52,12 @@ public class HttpControllerAdvice {
                 ));
     }
 
-    // =========================
-    // 400 - BAD REQUEST
-    // =========================
+    /**
+     * Handles invalid request exceptions.
+     *
+     * @param ex thrown exception
+     * @return standardized API error response
+     */
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ApiError> handleBadRequest(BadRequestException ex) {
 
@@ -45,9 +70,12 @@ public class HttpControllerAdvice {
                 ));
     }
 
-    // =========================
-    // 403 - FORBIDDEN
-    // =========================
+    /**
+     * Handles forbidden access exceptions.
+     *
+     * @param ex thrown exception
+     * @return standardized API error response
+     */
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<ApiError> handleForbidden(ForbiddenException ex) {
 
@@ -60,9 +88,30 @@ public class HttpControllerAdvice {
                 ));
     }
 
-    // =========================
-    // 409 - CONFLICT
-    // =========================
+    /**
+     * Handles unauthorized access exceptions.
+     *
+     * @param ex thrown exception
+     * @return standardized API error response
+     */
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ApiError> handleUnauthorized(UnauthorizedException ex) {
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ApiError(
+                        HttpStatus.UNAUTHORIZED.value(),
+                        "UNAUTHORIZED",
+                        ex.getMessage(),
+                        LocalDateTime.now()
+                ));
+    }
+
+    /**
+     * Handles resource conflict exceptions.
+     *
+     * @param ex thrown exception
+     * @return standardized API error response
+     */
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ApiError> handleConflict(ConflictException ex) {
 
@@ -75,9 +124,12 @@ public class HttpControllerAdvice {
                 ));
     }
 
-    // =========================
-    // 500 - fallback
-    // =========================
+    /**
+     * Handles all unhandled exceptions.
+     *
+     * @param ex thrown exception
+     * @return standardized API error response
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGeneric(Exception ex) {
 

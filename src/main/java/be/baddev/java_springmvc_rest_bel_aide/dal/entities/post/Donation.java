@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = true)
 public class Donation extends Post {
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "item_condition", nullable = true, length = 150)
     @ToString.Include
     private DonationCondition itemCondition;

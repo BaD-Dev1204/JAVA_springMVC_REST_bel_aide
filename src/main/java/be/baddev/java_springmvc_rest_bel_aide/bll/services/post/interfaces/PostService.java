@@ -12,7 +12,7 @@ public interface PostService {
 
     Post update(Post entity);
 
-    Optional<Post> findById(UUID id);
+    Post findById(UUID id);
 
     List<Post> findAll();
 

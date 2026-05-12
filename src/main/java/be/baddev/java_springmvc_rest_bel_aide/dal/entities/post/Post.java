@@ -44,11 +44,11 @@ public class Post extends BaseEntity {
     @ToString.Include
     private String city;
 
-    @Column(nullable = true, precision = 10, scale = 8)
+    @Column(nullable = true, precision = 17, scale = 15)
     @ToString.Include
     private BigDecimal latitude;
 
-    @Column(nullable = true, precision = 11, scale = 8)
+    @Column(nullable = true, precision = 18, scale = 15)
     @ToString.Include
     private BigDecimal longitude;
 

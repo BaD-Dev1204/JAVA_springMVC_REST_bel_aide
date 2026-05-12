@@ -30,6 +30,7 @@ public abstract class BaseEntity {
     @ToString.Include
     private UUID id;
 
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     @Setter(AccessLevel.NONE)

@@ -1,8 +1,10 @@
 package be.baddev.java_springmvc_rest_bel_aide.il.configs;
 
+import be.baddev.java_springmvc_rest_bel_aide.il.configs.converters.KeycloakRoleConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
@@ -15,6 +17,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 @EnableMethodSecurity
 public class SecurityConfig {
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -22,16 +25,17 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        /*
+
                         .requestMatchers(
                                 "/public/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/actuator/**"
                         ).permitAll()
+
                         .requestMatchers("/admin/**").hasRole("admin")
-                        */
                         .anyRequest().authenticated()
+
                 )
 
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -47,16 +51,12 @@ public class SecurityConfig {
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
 
-        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter =
-                new JwtGrantedAuthoritiesConverter();
+        JwtAuthenticationConverter jwtConverter =
+                new JwtAuthenticationConverter();
 
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("realm_access.roles");
-
-        // Spring attend "ROLE_"
-        grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-
-        JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
-        jwtConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        jwtConverter.setJwtGrantedAuthoritiesConverter(
+                new KeycloakRoleConverter()
+        );
 
         return jwtConverter;
     }

@@ -12,7 +12,7 @@ public interface RequestService {
 
     Request update(Request entity);
 
-    Optional<Request> findById(UUID id);
+    Request findById(UUID id);
 
     List<Request> findAll();
 
